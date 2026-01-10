@@ -22,6 +22,9 @@ public class Usuario {
     @Column(nullable = false, length = 160, unique = true)
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(nullable = false, length = 50)
     private String rol;      // ej: "miembro", "admin", "bibliotecario"
 
