@@ -10,6 +10,8 @@ import { Usuario } from '../../../core/domain/usuario'; // Verifica ruta relativ
 export class UsuarioListComponent implements OnInit {
 
   usuarios: Usuario[] = [];
+  loading: boolean = true;
+  error: boolean = false;
 
   constructor(private usuarioService: UsuarioService) { }
 
@@ -18,9 +20,17 @@ export class UsuarioListComponent implements OnInit {
   }
 
   cargarUsuarios(): void {
+    this.loading = true;
     this.usuarioService.findAll().subscribe({
-      next: (data) => this.usuarios = data,
-      error: (e) => console.error(e)
+      next: (data) => {
+          this.usuarios = data;
+          this.loading = false;
+      },
+      error: (e) => {
+          console.error(e);
+          this.loading = false;
+          this.error = true;
+      }
     });
   }
 

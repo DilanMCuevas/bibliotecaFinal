@@ -11,6 +11,8 @@ import { Libro } from '../../../core/domain/libro';
 export class LibroListComponent implements OnInit {
 
   libros: Libro[] = [];
+  loading: boolean = true;
+  error: boolean = false;
 
   constructor(private libroService: LibroService) { }
 
@@ -19,12 +21,18 @@ export class LibroListComponent implements OnInit {
   }
 
   cargarLibros(): void {
+    this.loading = true;
     this.libroService.findAll().subscribe({
       next: (data) => {
         this.libros = data;
+        this.loading = false;
         console.log('Libros cargados:', this.libros);
       },
-      error: (e) => console.error(e)
+      error: (e) => {
+        console.error(e);
+        this.loading = false;
+        this.error = true;
+      }
     });
   }
 }

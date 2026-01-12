@@ -1,6 +1,21 @@
 <div class="container mt-4">
     <h2>Catálogo de Libros</h2>
-    <div class="row">
+    <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p>Cargando catálogo...</p>
+    </div>
+
+    <div *ngIf="!loading && error" class="alert alert-danger">
+        Error al conectar con el servidor. Por favor intenta más tarde.
+    </div>
+
+    <div *ngIf="!loading && !error && libros.length === 0" class="alert alert-info">
+        No hay libros disponibles en este momento.
+    </div>
+
+    <div class="row" *ngIf="!loading && !error && libros.length > 0">
         <div class="col-md-4 mb-4" *ngFor="let libro of libros">
             <div class="card h-100">
                 <div class="card-body">
@@ -11,9 +26,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div *ngIf="libros.length === 0" class="alert alert-info">
-        No hay libros disponibles o no se ha podido conectar con el servidor.
     </div>
 </div>

@@ -16,6 +16,8 @@ export class PrestamoListComponent implements OnInit {
     prestamos: Prestamo[] = [];
     usuarioMap = new Map<number, string>();
     libroMap = new Map<number, string>();
+    loading: boolean = true;
+    error: boolean = false;
 
     constructor(private prestamoService: PrestamoService) {}
 
@@ -24,9 +26,17 @@ export class PrestamoListComponent implements OnInit {
     }
 
     cargarPrestamos(): void {
-        this.prestamoService.findAll().subscribe(data => {
-            this.prestamos = data;
-            // Opcional: Cargar nombres reales si fuera necesario
+        this.loading = true;
+        this.prestamoService.findAll().subscribe({
+            next: (data) => {
+                this.prestamos = data;
+                this.loading = false;
+            },
+            error: (e) => {
+                console.error(e);
+                this.loading = false;
+                this.error = true;
+            }
         });
     }
 }

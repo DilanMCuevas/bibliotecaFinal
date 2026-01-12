@@ -6,39 +6,47 @@
         </a>
     </div>
 
-    <table class="table table-bordered">
-        <thead class="table-light">
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let u of usuarios">
-                <td>{{ u.id }}</td>
-                <td>{{ u.nombre }}</td>
-                <td>{{ u.email }}</td>
-                <td>
-                    <span class="badge"
-                        [ngClass]="{'bg-success': u.rol === 'admin', 'bg-info': u.rol === 'miembro'}">
-                        {{ u.rol }}
-                    </span>
-                </td>
-                <td>{{ u.estado }}</td>
-                <td>
-                    <button class="btn btn-sm btn-danger" (click)="eliminar(u.id!)">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
 
-    <div *ngIf="usuarios.length === 0" class="alert alert-warning">
+    <div *ngIf="!loading && !error && usuarios.length === 0" class="alert alert-info">
         No hay usuarios registrados.
+    </div>
+
+    <div class="table-responsive" *ngIf="!loading && !error && usuarios.length > 0">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of usuarios">
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.nombre }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>
+                        <span class="badge"
+                            [ngClass]="{'bg-success': u.rol === 'admin', 'bg-info': u.rol === 'miembro'}">
+                            {{ u.rol }}
+                        </span>
+                    </td>
+                    <td>{{ u.estado }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" (click)="eliminar(u.id!)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
