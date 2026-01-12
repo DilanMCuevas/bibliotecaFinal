@@ -90,56 +90,66 @@ public class EmailService {
     private void enviarMimeMessage(MimeMessage mimeMessage) throws Exception {
         System.out.println(">>> ENVIANDO CON GMAIL API (NO SMTP)");
 
-        Gmail gmail = buildGmail();
+        try {
+            Gmail gmail = buildGmail();
 
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        mimeMessage.writeTo(buffer);
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            mimeMessage.writeTo(buffer);
 
-        String raw = Base64.getUrlEncoder().encodeToString(buffer.toByteArray());
+            String raw = Base64.getUrlEncoder().encodeToString(buffer.toByteArray());
 
-        Message message = new Message();
-        message.setRaw(raw);
+            Message message = new Message();
+            message.setRaw(raw);
 
-        gmail.users().messages().send("me", message).execute();
+            gmail.users().messages().send("me", message).execute();
+            System.out.println(">>> Correo enviado correctamente.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
-    private MimeMessage crearMensajeTexto(String para, String asunto, String texto) throws Exception {
+    private MimeMessage crearMensajeTexto(String to, String subject, String bodyText) throws Exception {
         Properties props = new Properties();
-        Session session = Session.getInstance(props);
+        Session session = Session.getDefaultInstance(props, null);
+        MimeMessage email = new MimeMessage(session);
 
-        MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from, "Biblioteca ESCOM", StandardCharsets.UTF_8.name()));
-        message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(para));
-        message.setSubject(asunto, StandardCharsets.UTF_8.name());
-        message.setText(texto, StandardCharsets.UTF_8.name());
-
-        return message;
+        email.setFrom(new InternetAddress(from));
+        email.addRecipient(jakarta.mail.Message.RecipientType.TO, new InternetAddress(to));
+        email.setSubject(subject);
+        email.setText(bodyText);
+        return email;
     }
 
-    private MimeMessage crearMensajeConAdjunto(String para, String asunto, String texto,
-                                               byte[] adjunto, String nombreArchivo) throws Exception {
-
+    private MimeMessage crearMensajeConAdjunto(String to,
+                                               String subject,
+                                               String bodyText,
+                                               byte[] attachmentData,
+                                               String attachmentName) throws Exception {
         Properties props = new Properties();
-        Session session = Session.getInstance(props);
+        Session session = Session.getDefaultInstance(props, null);
 
-        MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from, "Biblioteca ESCOM", StandardCharsets.UTF_8.name()));
-        message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(para));
-        message.setSubject(asunto, StandardCharsets.UTF_8.name());
+        MimeMessage email = new MimeMessage(session);
 
-        MimeBodyPart textPart = new MimeBodyPart();
-        textPart.setText(texto, StandardCharsets.UTF_8.name());
+        email.setFrom(new InternetAddress(from));
+        email.addRecipient(jakarta.mail.Message.RecipientType.TO, new InternetAddress(to));
+        email.setSubject(subject);
 
-        MimeBodyPart attachmentPart = new MimeBodyPart();
-        DataSource ds = new ByteArrayDataSource(adjunto, "application/pdf");
-        attachmentPart.setDataHandler(new DataHandler(ds));
-        attachmentPart.setFileName(nombreArchivo);
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent(bodyText, "text/plain");
 
         Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(textPart);
-        multipart.addBodyPart(attachmentPart);
+        multipart.addBodyPart(mimeBodyPart);
 
-        message.setContent(multipart);
-        return message;
+        if (attachmentData != null && attachmentData.length > 0) {
+            MimeBodyPart attachPart = new MimeBodyPart();
+            DataSource source = new ByteArrayDataSource(attachmentData, "application/pdf");
+            attachPart.setDataHandler(new DataHandler(source));
+            attachPart.setFileName(attachmentName);
+            multipart.addBodyPart(attachPart);
+        }
+
+        email.setContent(multipart);
+        return email;
     }
 }

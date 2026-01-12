@@ -2,6 +2,7 @@ package com.ipn.mx.biblioteca.features.usuario.service;
 
 import com.ipn.mx.biblioteca.core.domain.Usuario;
 import com.ipn.mx.biblioteca.features.usuario.repository.UsuarioRepository;
+import com.ipn.mx.biblioteca.features.reportes.service.ReporteContratoPdfService;
 import com.ipn.mx.biblioteca.util.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final EmailService emailService;
+    private final ReporteContratoPdfService reporteContratoPdfService;
 
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
@@ -51,19 +53,27 @@ public class UsuarioService {
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
 
         try {
-            emailService.enviarCorreoSimple(
+            byte[] pdfContrato = reporteContratoPdfService.generarPdfContrato(nuevoUsuario);
+            String nombreArchivo = "Contrato_Biblioteca_" + nuevoUsuario.getId() + ".pdf";
+
+            emailService.enviarCorreoConAdjunto(
                     nuevoUsuario.getEmail(),
-                    "Bienvenido a la Biblioteca ESCOM",
+                    "Bienvenido a la Biblioteca ESCOM - Registro Exitoso",
                     "Hola " + nuevoUsuario.getNombre() + ",\n\n" +
                             "Tu cuenta ha sido creada exitosamente.\n\n" +
-                            "Tus credenciales son:\n" +
+                            "Adjuntamos a este correo tu Contrato de Servicios Bibliotecarios. " +
+                            "Por favor, consérvalo para tus registros.\n\n" +
+                            "Tus credenciales de acceso son:\n" +
                             "Email: " + nuevoUsuario.getEmail() + "\n" +
                             "Password: " + nuevoUsuario.getPassword() + "\n\n" +
                             "Saludos,\n" +
-                            "El equipo de Biblioteca ESCOM");
+                            "El equipo de Biblioteca ESCOM",
+                    pdfContrato,
+                    nombreArchivo
+            );
         } catch (Exception e) {
             // Logear error pero no fallar la creacion del usuario
-            System.err.println("Error enviando correo de bienvenida: " + e.getMessage());
+            System.err.println("Error enviando correo de bienvenida con contrato: " + e.getMessage());
         }
 
         return nuevoUsuario;
