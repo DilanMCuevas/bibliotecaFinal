@@ -1,0 +1,31 @@
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Nueva Categoría</h4>
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre *</label>
+                    <input type="text" id="nombre" class="form-control" [(ngModel)]="categoria.nombre" name="nombre" required>
+                </div>
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" class="form-control" rows="3" [(ngModel)]="categoria.descripcion" name="descripcion"></textarea>
+                </div>
+
+                <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a routerLink="/categorias" class="btn btn-secondary me-md-2">Cancelar</a>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+</div>

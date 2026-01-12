@@ -23,8 +23,11 @@ export class PrestamoService {
     return this.http.post<Prestamo>(this.apiUrl, prestamo);
   }
 
-  // Método para obtener ejemplares disponibles por libro
-  getEjemplaresDisponibles(libroId: number): Observable<any[]> {
-     return this.http.get<any[]>(`${this.apiUrl}/ejemplares/por-libro/${libroId}`);
+  devolver(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/devolver`, {});
+  }
+
+  renovar(id: number): Observable<Prestamo> {
+    return this.http.put<Prestamo>(`${this.apiUrl}/${id}/renovar`, {});
   }
 }

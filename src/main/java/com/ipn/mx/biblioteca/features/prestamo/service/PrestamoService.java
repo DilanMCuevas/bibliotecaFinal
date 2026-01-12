@@ -41,8 +41,7 @@ public class PrestamoService {
         return prestamoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "Préstamo con id " + id + " no encontrado"
-                ));
+                        "Préstamo con id " + id + " no encontrado"));
     }
 
     public List<Prestamo> findByUsuario(Integer usuarioId) {
@@ -60,32 +59,27 @@ public class PrestamoService {
         Ejemplar ejemplar = ejemplarRepository.findById(prestamo.getEjemplarId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Ejemplar con id " + prestamo.getEjemplarId() + " no existe"
-                ));
+                        "Ejemplar con id " + prestamo.getEjemplarId() + " no existe"));
 
         if (!"disponible".equalsIgnoreCase(ejemplar.getEstado())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "El ejemplar " + ejemplar.getId() + " no está disponible para préstamo"
-            );
+                    "El ejemplar " + ejemplar.getId() + " no está disponible para préstamo");
         }
 
         // 2) Validar que el usuario exista
         Usuario usuario = usuarioRepository.findById(prestamo.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Usuario con id " + prestamo.getUsuarioId() + " no existe"
-                ));
+                        "Usuario con id " + prestamo.getUsuarioId() + " no existe"));
 
         // 3) No prestar usuario con multas pendientes
-        boolean tieneMultasPendientes =
-                multaRepository.existsByUsuarioIdAndEstado(usuario.getId(), "pendiente");
+        boolean tieneMultasPendientes = multaRepository.existsByUsuarioIdAndEstado(usuario.getId(), "pendiente");
 
         if (tieneMultasPendientes) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "El usuario tiene multas pendientes y no puede realizar préstamos"
-            );
+                    "El usuario tiene multas pendientes y no puede realizar préstamos");
         }
 
         // 4) No prestar si usuario sobrepasa límite
@@ -96,8 +90,7 @@ public class PrestamoService {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "El usuario ya tiene el máximo de préstamos activos (" +
-                            MAX_PRESTAMOS_ACTIVOS + ")"
-            );
+                            MAX_PRESTAMOS_ACTIVOS + ")");
         }
 
         // 5) Calcular fecha de préstamo y vencimiento automáticamente
@@ -109,8 +102,7 @@ public class PrestamoService {
 
         if (prestamo.getFechaVencimiento() == null) {
             prestamo.setFechaVencimiento(
-                    prestamo.getFechaPrestamo().plusDays(DIAS_PRESTAMO)
-            );
+                    prestamo.getFechaPrestamo().plusDays(DIAS_PRESTAMO));
         }
 
         if (prestamo.getRenovaciones() == null) {
@@ -154,6 +146,65 @@ public class PrestamoService {
         existente.setRenovaciones(datos.getRenovaciones());
 
         return prestamoRepository.save(existente);
+    }
+
+    public void devolver(Integer id) {
+        Prestamo prestamo = findById(id);
+
+        if ("devuelto".equalsIgnoreCase(prestamo.getEstado())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El préstamo ya fue devuelto");
+        }
+
+        Ejemplar ejemplar = ejemplarRepository.findById(prestamo.getEjemplarId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ejemplar no encontrado"));
+
+        LocalDateTime ahora = LocalDateTime.now();
+
+        // Calcular multas si aplica
+        if (ahora.isAfter(prestamo.getFechaVencimiento())) {
+            long diasRetraso = ChronoUnit.DAYS.between(prestamo.getFechaVencimiento(), ahora);
+            if (diasRetraso > 0) {
+                // Generar multa: $10 por día de retraso (ejemplo)
+                java.math.BigDecimal montoMulta = java.math.BigDecimal.valueOf(diasRetraso * 10);
+
+                Multa multa = Multa.builder()
+                        .prestamoId(prestamo.getId())
+                        .usuarioId(prestamo.getUsuarioId())
+                        .motivo("Retraso de " + diasRetraso + " días")
+                        .monto(montoMulta)
+                        .estado("pendiente")
+                        .build();
+
+                multaRepository.save(multa);
+            }
+        }
+
+        prestamo.setEstado("devuelto");
+        prestamoRepository.save(prestamo);
+
+        ejemplar.setEstado("disponible");
+        ejemplarRepository.save(ejemplar);
+    }
+
+    public Prestamo renovar(Integer id) {
+        Prestamo prestamo = findById(id);
+
+        if (!"activo".equalsIgnoreCase(prestamo.getEstado())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Solo se pueden renovar préstamos activos");
+        }
+
+        if (LocalDateTime.now().isAfter(prestamo.getFechaVencimiento())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se puede renovar un préstamo vencido");
+        }
+
+        if (prestamo.getRenovaciones() >= 2) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Se ha alcanzado el límite de renovaciones");
+        }
+
+        prestamo.setFechaVencimiento(prestamo.getFechaVencimiento().plusDays(7));
+        prestamo.setRenovaciones(prestamo.getRenovaciones() + 1);
+
+        return prestamoRepository.save(prestamo);
     }
 
     public void delete(Integer id) {

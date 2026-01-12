@@ -1,35 +1,54 @@
 <div class="container mt-4">
-    <h2>Catálogo de Autores</h2>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2>Gestión de Autores</h2>
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar autor..."
+                       [(ngModel)]="searchTerm" (input)="filtrarAutores()">
+            </div>
+            <a routerLink="/autores/nuevo" class="btn btn-primary text-nowrap">
+                <i class="bi bi-plus-lg"></i> Nuevo
+            </a>
+        </div>
+    </div>
 
     <div *ngIf="loading" class="text-center my-4">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
         </div>
-        <p class="mt-2">Cargando datos...</p>
+        <p class="mt-2">Cargando autores...</p>
     </div>
 
     <div *ngIf="!loading && error" class="alert alert-danger">
-        Error al conectar con el servidor. Por favor intenta más tarde.
+        Error al cargar los autores.
     </div>
 
     <div *ngIf="!loading && !error && autores.length === 0" class="alert alert-info">
         No hay autores registrados.
     </div>
 
-    <table *ngIf="!loading && !error && autores.length > 0" class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Biografía</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let autor of autores">
-                <td>{{ autor.id }}</td>
-                <td>{{ autor.nombre }}</td>
-                <td>{{ autor.bio }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row" *ngIf="!loading && !error && autoresFiltrados.length > 0">
+        <div class="col-md-4 mb-4" *ngFor="let autor of autoresFiltrados">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ autor.nombre }}</h5>
+                    <p class="card-text text-muted" *ngIf="autor.bio">
+                        {{ autor.bio | slice:0:100 }}{{ autor.bio.length > 100 ? '...' : '' }}
+                    </p>
+                    <p class="card-text text-muted fst-italic" *ngIf="!autor.bio">Sin biografía</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                         <button class="btn btn-outline-primary btn-sm flex-grow-1" [routerLink]="['/autores/editar', autor.id]">
+                            Editar
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm flex-grow-1" (click)="eliminar(autor.id)">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

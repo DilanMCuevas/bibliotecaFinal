@@ -1,0 +1,52 @@
+<div class="container mt-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2>Reseñas Recientes</h2>
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar en comentarios..."
+                       [(ngModel)]="searchTerm" (input)="filtrarResenas()">
+            </div>
+            <a routerLink="/resenas/nueva" class="btn btn-warning text-nowrap text-dark">
+                <i class="bi bi-star"></i> Nueva
+            </a>
+        </div>
+    </div>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando reseñas...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    Error al cargar las reseñas. Intente de nuevo más tarde.
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="cargarResenas()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!loading && !error && resenas.length === 0" class="alert alert-info">
+    No hay reseñas publicadas aún.
+  </div>
+
+  <div class="row" *ngIf="!loading && !error && resenasFiltradas.length > 0">
+    <div class="col-md-6 col-lg-4 mb-3" *ngFor="let r of resenasFiltradas">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Libro ID: {{ r.libroId }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            <span *ngFor="let i of [].constructor(r.rating)">⭐</span>
+          </h6>
+          <p class="card-text">"{{ r.comentario }}"</p>
+          <p class="card-text text-muted small">Usuario ID: {{ r.usuarioId }}</p>
+          <div class="d-flex justify-content-end gap-1">
+              <button class="btn btn-sm btn-outline-primary" [routerLink]="['/resenas/editar', r.id]">Editar</button>
+              <button class="btn btn-sm btn-outline-danger" (click)="eliminar(r.id!)">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

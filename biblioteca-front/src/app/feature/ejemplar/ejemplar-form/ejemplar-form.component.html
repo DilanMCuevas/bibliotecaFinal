@@ -1,0 +1,50 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Registrar Nuevo Ejemplar</h4>
+                </div>
+                <div class="card-body">
+                    <div *ngIf="errorMessage" class="alert alert-danger">
+                        {{ errorMessage }}
+                    </div>
+
+                    <form (ngSubmit)="onSubmit()">
+
+                        <div class="mb-3">
+                            <label for="libroId" class="form-label">Libro</label>
+                            <select class="form-select" id="libroId" [(ngModel)]="ejemplar.libroId" name="libroId" required>
+                                <option [ngValue]="0" disabled>Selecciona un libro</option>
+                                <option *ngFor="let libro of libros" [ngValue]="libro.id">
+                                    {{ libro.titulo }} ({{ libro.editorial }})
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ubicacion" class="form-label">Ubicación Física</label>
+                            <input type="text" class="form-control" id="ubicacion" [(ngModel)]="ejemplar.ubicacion"
+                                   name="ubicacion" required placeholder="Ej. Estante A, Fila 2">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado Inicial</label>
+                            <select class="form-select" id="estado" [(ngModel)]="ejemplar.estado" name="estado" required>
+                                <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a routerLink="/ejemplares" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary" [disabled]="loading">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

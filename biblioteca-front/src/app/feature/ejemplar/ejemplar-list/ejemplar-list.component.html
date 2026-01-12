@@ -1,0 +1,72 @@
+<div class="container mt-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2>Gestión de Ejemplares</h2>
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar por libro, estado o ubicación..."
+                       [(ngModel)]="searchTerm" (input)="filtrarEjemplares()">
+            </div>
+            <a routerLink="/ejemplares/nuevo" class="btn btn-primary text-nowrap">
+                <i class="bi bi-plus-lg"></i> Nuevo
+            </a>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2">Cargando ejemplares...</p>
+    </div>
+
+    <div *ngIf="!loading && error" class="alert alert-danger">
+        Error al cargar los datos. Por favor intenta más tarde.
+    </div>
+
+    <div *ngIf="!loading && !error && ejemplares.length === 0" class="alert alert-info">
+        No hay ejemplares registrados.
+    </div>
+
+    <div class="table-responsive" *ngIf="!loading && !error && ejemplaresFiltrados.length > 0">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Libro</th>
+                    <th>Estado</th>
+                    <th>Ubicación</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ejemplar of ejemplaresFiltrados">
+                    <td>{{ ejemplar.id }}</td>
+                    <td class="fw-bold">{{ getNombreLibro(ejemplar.libroId) }}</td>
+                    <td>
+                        <span class="badge"
+                              [ngClass]="{
+                                'bg-success': ejemplar.estado === 'DISPONIBLE' || ejemplar.estado === 'Disponible' || ejemplar.estado === 'disponible',
+                                'bg-warning text-dark': ejemplar.estado === 'PRESTADO' || ejemplar.estado === 'Prestado' || ejemplar.estado === 'prestado',
+                                'bg-danger': ejemplar.estado === 'MANTENIMIENTO' || ejemplar.estado === 'Mantenimiento' || ejemplar.estado === 'mantenimiento',
+                                'bg-secondary': ejemplar.estado === 'RESERVADO' || ejemplar.estado === 'Reservado' || ejemplar.estado === 'reservado'
+                              }">
+                            {{ ejemplar.estado }}
+                        </span>
+                    </td>
+                    <td>{{ ejemplar.ubicacion }}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/ejemplares/editar', ejemplar.id]" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="eliminar(ejemplar.id)" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

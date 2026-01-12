@@ -1,38 +1,55 @@
 <div class="container mt-4">
-    <h2>Nuevo Usuario</h2>
-    <form (ngSubmit)="guardar()" #userForm="ngForm">
-        <div class="mb-3">
-            <label class="form-label">Nombre Completo</label>
-            <input type="text" class="form-control" [(ngModel)]="usuario.nombre" name="nombre" required>
+    <div class="card col-md-8 mx-auto shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">{{ isEditMode ? 'Editar Usuario' : 'Nuevo Usuario' }}</h3>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" [(ngModel)]="usuario.email" name="email" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Contraseña</label>
-            <input type="password" class="form-control" [(ngModel)]="usuario.password" name="password" required>
-        </div>
+        <div class="card-body">
+            <form (ngSubmit)="guardar()" #f="ngForm">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="usuario.nombre" required>
+                </div>
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Rol</label>
-                <select class="form-select" [(ngModel)]="usuario.rol" name="rol">
-                    <option value="miembro">Miembro</option>
-                    <option value="admin">Administrador</option>
-                    <option value="bibliotecario">Bibliotecario</option>
-                </select>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Estado</label>
-                <select class="form-select" [(ngModel)]="usuario.estado" name="estado">
-                    <option value="activo">Activo</option>
-                    <option value="bloqueado">Bloqueado</option>
-                </select>
-            </div>
-        </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" [(ngModel)]="usuario.email" required>
+                    <div class="form-text text-muted" *ngIf="!isEditMode">
+                        Se enviará un correo de bienvenida con las credenciales a esta dirección.
+                    </div>
+                </div>
 
-        <button type="submit" class="btn btn-success" [disabled]="!userForm.form.valid">Guardar</button>
-        <a routerLink="/usuarios" class="btn btn-secondary ms-2">Cancelar</a>
-    </form>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password"
+                           [(ngModel)]="usuario.password" [required]="!isEditMode">
+                    <small *ngIf="isEditMode" class="text-muted">Dejar en blanco para mantener la actual.</small>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="rol" class="form-label">Rol</label>
+                        <select class="form-select" id="rol" name="rol" [(ngModel)]="usuario.rol" required>
+                            <option value="miembro">Miembro</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select class="form-select" id="estado" name="estado" [(ngModel)]="usuario.estado" required>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <button type="button" class="btn btn-secondary" routerLink="/usuarios">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!f.valid">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

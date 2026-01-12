@@ -21,6 +21,14 @@ export class UsuarioService {
     return this.http.post<Usuario>(this.apiUrl, usuario);
   }
 
+  update(id: number, usuario: Usuario): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/${id}`, usuario);
+  }
+
+  findById(id: number): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.apiUrl}/${id}`);
+  }
+
   // Agrega metodo delete si es necesario
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);

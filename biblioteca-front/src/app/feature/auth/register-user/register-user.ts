@@ -35,7 +35,7 @@ export class RegisterUser {
         this.usuarioService.save(this.usuario).subscribe({
             next: (createdUser) => {
                 this.loading = false;
-                alert('Registro exitoso. Ahora puedes iniciar sesión.');
+                alert('Registro exitoso. Se ha enviado un correo de bienvenida con tus credenciales.');
                 this.router.navigate(['/login']);
             },
             error: (err) => {

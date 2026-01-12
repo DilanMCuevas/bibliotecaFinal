@@ -1,0 +1,68 @@
+<div class="container mt-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2>Gestión de Multas</h2>
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar por motivo o estado..."
+                       [(ngModel)]="searchTerm" (input)="filtrarMultas()">
+            </div>
+            <button class="btn btn-primary text-nowrap" routerLink="/multas/nueva">
+                <i class="bi bi-plus-lg"></i> Asignar Multa
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-danger" role="status"></div>
+        <p>Verificando multas...</p>
+    </div>
+
+    <div *ngIf="!loading && error" class="alert alert-danger">Error al cargar datos.</div>
+
+    <div *ngIf="!loading && !error && multas.length === 0" class="alert alert-success">
+        No tienes multas pendientes. ¡Excelente!
+    </div>
+
+    <div class="table-responsive" *ngIf="!loading && !error && multasFiltradas.length > 0">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Motivo</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let multa of multasFiltradas">
+                    <td>{{ multa.id }}</td>
+                    <td>{{ multa.motivo }}</td>
+                    <td class="text-danger fw-bold">${{ multa.monto }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="{'bg-success': (multa.estado | lowercase) === 'pagada', 'bg-danger': (multa.estado | lowercase) === 'pendiente'}">
+                            {{ multa.estado }}
+                        </span>
+                    </td>
+                    <td>
+                        <button *ngIf="(multa.estado | lowercase) === 'pendiente' && !isAdmin" class="btn btn-sm btn-success" (click)="pagar(multa.id)">
+                            Pagar
+                        </button>
+
+                        <div *ngIf="isAdmin">
+                             <button class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/multas/editar', multa.id]">
+                                <i class="bi bi-pencil"></i>
+                             </button>
+                             <button class="btn btn-sm btn-outline-danger" (click)="eliminar(multa.id)">
+                                <i class="bi bi-trash"></i>
+                             </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

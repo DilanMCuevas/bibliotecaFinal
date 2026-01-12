@@ -15,12 +15,27 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/autores" routerLinkActive="active">Autores</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/ejemplares" routerLinkActive="active">Ejemplares</a>
+        </li>
         <!-- Mostrar Usuarios solo si es admin -->
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/categorias" routerLinkActive="active">Categorías</a>
+        </li>
         <li class="nav-item" *ngIf="currentUser.rol === 'admin'">
             <a class="nav-link" routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" routerLink="/prestamos" routerLinkActive="active">Préstamos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/reservas" routerLinkActive="active">Reservas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/resenas" routerLinkActive="active">Reseñas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/multas" routerLinkActive="active">Multas</a>
         </li>
       </ul>
       <div class="d-flex align-items-center">

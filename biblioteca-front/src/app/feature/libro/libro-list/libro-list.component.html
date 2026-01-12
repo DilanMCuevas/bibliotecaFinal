@@ -1,5 +1,20 @@
 <div class="container mt-4">
-    <h2>Catálogo de Libros</h2>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2>Catálogo de Libros</h2>
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <div class="input-group">
+                <span class="input-group-text" id="addon-searching"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar por título, editorial o año..."
+                       [(ngModel)]="terminoBusqueda" (input)="filtrarLibros()">
+            </div>
+            <button class="btn btn-primary text-nowrap" routerLink="/libros/nuevo">
+                <i class="bi bi-plus-lg"></i> Nuevo
+            </button>
+        </div>
+    </div>
+
     <div *ngIf="loading" class="text-center my-4">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
@@ -15,16 +30,26 @@
         No hay libros disponibles en este momento.
     </div>
 
-    <div class="row" *ngIf="!loading && !error && libros.length > 0">
-        <div class="col-md-4 mb-4" *ngFor="let libro of libros">
-            <div class="card h-100">
+    <div class="row" *ngIf="!loading && !error && librosFiltrados.length > 0">
+        <div class="col-md-4 mb-4" *ngFor="let libro of librosFiltrados">
+            <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title">{{ libro.titulo }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ libro.editorial }} - {{ libro.anio }}</h6>
-                    <p class="card-text">{{ libro.sinopsis | slice:0:100 }}...</p>
-                    <a href="#" class="card-link">Ver detalles</a>
+                    <h5 class="card-title fw-bold text-primary">{{ libro.titulo }}</h5>
+                    <div class="mb-2">
+                        <span class="badge bg-secondary me-1">{{ libro.editorial }}</span>
+                        <span class="badge bg-light text-dark border">{{ libro.anio }}</span>
+                    </div>
+                    <p class="card-text text-muted">{{ libro.sinopsis | slice:0:150 }}<span *ngIf="libro.sinopsis.length > 150">...</span></p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                       <button [routerLink]="['/libros/editar', libro.id]" class="btn btn-outline-primary btn-sm flex-grow-1">Editar</button>
+                       <button class="btn btn-outline-danger btn-sm flex-grow-1" (click)="eliminar(libro.id!)">Eliminar</button>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div *ngIf="!loading && !error && libros.length > 0 && librosFiltrados.length === 0" class="alert alert-warning">
+        No se encontraron libros que coincidan con "{{ terminoBusqueda }}".
     </div>
 </div>

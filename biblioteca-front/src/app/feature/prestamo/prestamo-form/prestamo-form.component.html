@@ -36,6 +36,9 @@
             <div *ngIf="libroSeleccionadoId && ejemplaresDisponibles.length === 0" class="form-text text-danger">
                 No hay ejemplares disponibles para este libro.
             </div>
+            <div class="form-text text-muted" *ngIf="prestamo.ejemplarId && prestamo.usuarioId">
+                Se enviará un comprobante PDF al correo del usuario seleccionado.
+            </div>
         </div>
 
         <div class="mb-3">

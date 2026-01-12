@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 
@@ -14,7 +14,11 @@ export class Login {
     loading = false;
     errorMessage = '';
 
-    constructor(private authService: AuthService, private router: Router) {}
+    constructor(
+        private authService: AuthService,
+        private router: Router,
+        private cdr: ChangeDetectorRef
+    ) {}
 
     onSubmit() {
         if (!this.email || !this.password) {
@@ -24,6 +28,9 @@ export class Login {
 
         this.loading = true;
         this.errorMessage = '';
+
+        // Forzar detección de cambios para mostrar spinner inmediatamente si fuera necesario
+        this.cdr.detectChanges();
 
         this.authService.login({ email: this.email, password: this.password }).subscribe({
             next: (user) => {
@@ -38,6 +45,8 @@ export class Login {
                 } else {
                     this.errorMessage = 'Error en el servidor. Intenta más tarde';
                 }
+                // Asegurar que Angular detecte el cambio de estado y habilite el botón nuevamente
+                this.cdr.detectChanges();
             }
         });
     }

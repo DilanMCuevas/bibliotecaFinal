@@ -1,31 +1,33 @@
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Gestión de Usuarios</h2>
-        <a routerLink="/usuarios/nuevo" class="btn btn-primary">
-            <i class="bi bi-person-plus-fill"></i> Nuevo Usuario
-        </a>
+        <div class="col-md-6 d-flex gap-2">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar usuario..."
+                       [(ngModel)]="searchTerm" (input)="filtrarUsuarios()">
+            </div>
+            <button class="btn btn-primary text-nowrap" routerLink="/usuarios/nuevo">
+                <i class="bi bi-person-plus"></i> Nuevo
+            </button>
+        </div>
     </div>
 
     <div *ngIf="loading" class="text-center my-4">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
         </div>
-        <p class="mt-2">Cargando datos...</p>
+        <p class="mt-2">Cargando usuarios...</p>
     </div>
 
     <div *ngIf="!loading && error" class="alert alert-danger">
-        Error al conectar con el servidor. Por favor intenta más tarde.
+        Error al cargar usuarios.
     </div>
 
-    <div *ngIf="!loading && !error && usuarios.length === 0" class="alert alert-info">
-        No hay usuarios registrados.
-    </div>
-
-    <div class="table-responsive" *ngIf="!loading && !error && usuarios.length > 0">
-        <table class="table table-bordered">
+    <div class="table-responsive" *ngIf="!loading && !error && usuariosFiltrados.length > 0">
+        <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Rol</th>
@@ -34,19 +36,26 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let u of usuarios">
-                    <td>{{ u.id }}</td>
-                    <td>{{ u.nombre }}</td>
-                    <td>{{ u.email }}</td>
+                <tr *ngFor="let usuario of usuariosFiltrados">
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.email }}</td>
                     <td>
-                        <span class="badge"
-                            [ngClass]="{'bg-success': u.rol === 'admin', 'bg-info': u.rol === 'miembro'}">
-                            {{ u.rol }}
-                        </span>
+                        <span class="badge" [ngClass]="{
+                            'bg-primary': usuario.rol === 'admin',
+                            'bg-secondary': usuario.rol !== 'admin'
+                        }">{{ usuario.rol }}</span>
                     </td>
-                    <td>{{ u.estado }}</td>
                     <td>
-                        <button class="btn btn-sm btn-danger" (click)="eliminar(u.id!)">
+                        <span class="badge" [ngClass]="{
+                            'bg-success': usuario.estado === 'activo',
+                            'bg-danger': usuario.estado === 'inactivo'
+                        }">{{ usuario.estado }}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" [routerLink]="['/usuarios/editar', usuario.id]">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="eliminar(usuario.id!)">
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>

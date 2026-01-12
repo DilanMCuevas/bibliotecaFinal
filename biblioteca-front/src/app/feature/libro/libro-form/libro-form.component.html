@@ -1,0 +1,41 @@
+<div class="container mt-4">
+    <h2>{{ libro.id ? 'Editar Libro' : 'Nuevo Libro' }}</h2>
+    <form (ngSubmit)="onSubmit()" #libroForm="ngForm">
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" class="form-control" id="titulo" [(ngModel)]="libro.titulo" name="titulo" required>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="isbn" class="form-label">ISBN</label>
+                <input type="text" class="form-control" id="isbn" [(ngModel)]="libro.isbn" name="isbn" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="editorial" class="form-label">Editorial</label>
+                <input type="text" class="form-control" id="editorial" [(ngModel)]="libro.editorial" name="editorial" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="anio" class="form-label">Año</label>
+                <input type="number" class="form-control" id="anio" [(ngModel)]="libro.anio" name="anio" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="edicion" class="form-label">Edición</label>
+                <input type="text" class="form-control" id="edicion" [(ngModel)]="libro.edicion" name="edicion">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="sinopsis" class="form-label">Sinopsis</label>
+            <textarea class="form-control" id="sinopsis" rows="4" [(ngModel)]="libro.sinopsis" name="sinopsis"></textarea>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+        <button type="submit" class="btn btn-success" [disabled]="!libroForm.form.valid || loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            Guardar
+        </button>
+        <button type="button" class="btn btn-secondary ms-2" routerLink="/libros">Cancelar</button>
+    </form>
+</div>

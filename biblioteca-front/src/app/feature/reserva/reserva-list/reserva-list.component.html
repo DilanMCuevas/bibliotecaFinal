@@ -1,0 +1,59 @@
+<div class="container mt-4">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2>Reservas Activas</h2>
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar por ID o estado..."
+                       [(ngModel)]="searchTerm" (input)="filtrarReservas()">
+            </div>
+             <a routerLink="/reservas/nueva" class="btn btn-primary text-nowrap">
+                <i class="bi bi-plus-lg"></i> Nueva
+            </a>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p>Cargando reservas...</p>
+    </div>
+
+    <div *ngIf="!loading && error" class="alert alert-danger">Error al cargar datos.</div>
+
+    <div *ngIf="!loading && !error && reservas.length === 0" class="alert alert-info">
+        No tienes reservas activas.
+    </div>
+
+    <div class="table-responsive" *ngIf="!loading && !error && reservasFiltradas.length > 0">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Reserva ID</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let reserva of reservasFiltradas">
+                    <td><strong>#{{ reserva.id }}</strong></td>
+                    <td><span class="badge bg-secondary">{{ reserva.estado }}</span></td>
+                    <td>{{ reserva.fechaReserva | date:'shortDate' }}</td>
+                    <td>
+                         <button class="btn btn-outline-danger btn-sm me-1" (click)="cancelar(reserva.id)" title="Cancelar">
+                             <i class="bi bi-x-circle"></i> Cancelar
+                         </button>
+                         <button class="btn btn-outline-primary btn-sm me-1" [routerLink]="['/reservas/editar', reserva.id]" title="Editar">
+                             <i class="bi bi-pencil"></i>
+                         </button>
+                         <button class="btn btn-outline-danger btn-sm" (click)="eliminar(reserva.id)" title="Eliminar Permanentemente">
+                             <i class="bi bi-trash"></i>
+                         </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,59 +1,77 @@
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Gestión de Préstamos</h2>
-        <a routerLink="/prestamos/nuevo" class="btn btn-primary">
-            <i class="bi bi-journal-plus"></i> Nuevo Préstamo
-        </a>
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2>Gestión de Préstamos</h2>
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar por usuario o libro..."
+                       [(ngModel)]="searchTerm" (input)="filtrarPrestamos()">
+            </div>
+            <button class="btn btn-primary text-nowrap" routerLink="/prestamos/nuevo">
+                <i class="bi bi-journal-plus"></i> Nuevo
+            </button>
+        </div>
     </div>
 
     <div *ngIf="loading" class="text-center my-4">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
         </div>
-        <p class="mt-2">Cargando datos...</p>
+        <p class="mt-2">Cargando préstamos...</p>
     </div>
 
     <div *ngIf="!loading && error" class="alert alert-danger">
-        Error al conectar con el servidor. Por favor intenta más tarde.
+        Error al cargar préstamos.
     </div>
 
-    <div *ngIf="!loading && !error && prestamos.length === 0" class="alert alert-info">
-        No hay préstamos activos.
+    <div class="table-responsive" *ngIf="!loading && !error && prestamosFiltrados.length > 0">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Libro / Ejemplar</th>
+                    <th>Fecha Préstamo</th>
+                    <th>Vencimiento</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of prestamosFiltrados">
+                    <td>{{ usuarioMap.get(p.usuarioId) || p.usuarioId }}</td>
+                    <td>
+                        {{ getTituloLibro(p.ejemplarId) }}
+                        <small class="text-muted d-block">Ejemplar: {{ p.ejemplarId }}</small>
+                    </td>
+                    <td>{{ p.fechaPrestamo | date:'shortDate' }}</td>
+                    <td>{{ p.fechaVencimiento | date:'shortDate' }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="{
+                            'bg-success': p.estado === 'activo' && !esVencido(p),
+                            'bg-secondary': p.estado === 'devuelto',
+                            'bg-danger': p.estado === 'vencido' || esVencido(p)
+                        }">
+                           {{ esVencido(p) ? 'Vencido (' + p.estado + ')' : p.estado }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-success me-1"
+                                *ngIf="p.estado === 'activo'"
+                                (click)="devolver(p.id!)"
+                                title="Devolver Libro">
+                            <i class="bi bi-box-arrow-in-down"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning"
+                                *ngIf="p.estado === 'activo' && !esVencido(p)"
+                                (click)="renovar(p.id!)"
+                                title="Renovar (+7 días)">
+                            <i class="bi bi-clock-history"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    <table class="table table-bordered table-striped" *ngIf="!loading && !error && prestamos.length > 0">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Usuario (ID)</th>
-                <th>Ejemplar (ID)</th>
-                <th>Fecha Préstamo</th>
-                <th>Vencimiento</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let p of prestamos">
-                <td>{{ p.id }}</td>
-                <td>{{ p.usuarioId }}</td>
-                <td>{{ p.ejemplarId }}</td>
-                <td>{{ p.fechaPrestamo | date:'shortDate' }}</td>
-                <td>{{ p.fechaVencimiento | date:'shortDate' }}</td>
-                <td>
-                    <span class="badge" [ngClass]="{
-                        'bg-success': p.estado === 'activo',
-                        'bg-warning': p.estado === 'vencido',
-                        'bg-secondary': p.estado === 'devuelto'
-                    }">{{ p.estado }}</span>
-                </td>
-                <td>
-                    <!-- Boton para Devolucion rapida -->
-                    <button *ngIf="p.estado === 'activo'" class="btn btn-sm btn-outline-success">
-                        Devolver
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </div>

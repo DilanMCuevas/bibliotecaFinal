@@ -1,0 +1,42 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h3>{{ titulo }}</h3>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="guardar()" #f="ngForm">
+
+        <!-- Selección de Usuario (Solo Admin) -->
+        <div class="mb-3" *ngIf="isAdmin">
+          <label for="usuario" class="form-label">Usuario</label>
+          <select class="form-select" id="usuario" name="usuarioId" [(ngModel)]="reserva.usuarioId" required>
+            <option [ngValue]="0" disabled>Seleccione un usuario</option>
+            <option *ngFor="let u of usuarios" [ngValue]="u.id">
+              {{ u.nombre }} ({{ u.email }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Selección de Libro -->
+        <div class="mb-3">
+          <label for="libro" class="form-label">Libro</label>
+          <select class="form-select" id="libro" name="libroId" [(ngModel)]="reserva.libroId" required>
+            <option [ngValue]="0" disabled>Seleccione un libro</option>
+            <option *ngFor="let l of libros" [ngValue]="l.id">
+              {{ l.titulo }} - {{ l.isbn }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Fecha (Automática o manual si es necesario, por ahora oculta/readonly) -->
+
+        <button type="submit" class="btn btn-success" [disabled]="!f.valid || reserva.libroId === 0 || (isAdmin && reserva.usuarioId === 0)">
+          <i class="bi bi-save"></i> Guardar
+        </button>
+        <button type="button" class="btn btn-secondary ms-2" routerLink="/reservas">
+          Cancelar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

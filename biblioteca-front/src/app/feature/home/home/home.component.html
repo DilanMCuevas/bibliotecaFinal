@@ -63,4 +63,74 @@
       </div>
     </div>
   </div>
+
+  <!-- Tarjeta de Ejemplares (Solo Admin) -->
+  <div class="col-md-4 mb-4" *ngIf="currentUser?.rol === 'admin'">
+    <div class="card h-100 shadow-sm border-0 hover-card">
+      <div class="card-body text-center">
+        <div class="icon-circle bg-secondary text-white mb-3 mx-auto">
+          <i class="bi bi-upc-scan fs-2"></i>
+        </div>
+        <h5 class="card-title fw-bold">Inventario (Ejemplares)</h5>
+        <p class="card-text text-muted">Gestiona el inventario físico de ejemplares.</p>
+        <a routerLink="/ejemplares" class="btn btn-outline-secondary stretched-link">Administrar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta de Categorías (Visible para todos, admin gestiona) -->
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm border-0 hover-card">
+      <div class="card-body text-center">
+        <div class="icon-circle bg-dark text-white mb-3 mx-auto">
+          <i class="bi bi-tags fs-2"></i>
+        </div>
+        <h5 class="card-title fw-bold">Categorías</h5>
+        <p class="card-text text-muted">Explora libros por temáticas.</p>
+        <a routerLink="/categorias" class="btn btn-outline-dark stretched-link">Ver Categorías</a>
+      </div>
+    </div>
+  </div>
+
+   <!-- Tarjeta de Multas (Visible usuario ve las suyas) -->
+   <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm border-0 hover-card">
+      <div class="card-body text-center">
+        <div class="icon-circle bg-danger text-white mb-3 mx-auto">
+          <i class="bi bi-exclamation-triangle fs-2"></i>
+        </div>
+        <h5 class="card-title fw-bold">Multas</h5>
+        <p class="card-text text-muted">Revisa el estado de tus multas o sanciones.</p>
+        <a routerLink="/multas" class="btn btn-outline-danger stretched-link">Consultar</a>
+      </div>
+    </div>
+  </div>
+
+    <!-- Tarjeta de Reservas -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm border-0 hover-card">
+          <div class="card-body text-center">
+            <div class="icon-circle bg-purple text-white mb-3 mx-auto" style="background-color: #6f42c1;">
+              <i class="bi bi-calendar-event fs-2"></i>
+            </div>
+            <h5 class="card-title fw-bold">Reservas</h5>
+            <p class="card-text text-muted">Gestiona tus reservas de libros no disponibles.</p>
+            <a routerLink="/reservas" class="btn btn-outline-primary stretched-link" style="border-color: #6f42c1; color: #6f42c1;">Mis Reservas</a>
+          </div>
+        </div>
+      </div>
+
+    <!-- Tarjeta de Reseñas -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm border-0 hover-card">
+            <div class="card-body text-center">
+            <div class="icon-circle bg-warning text-dark mb-3 mx-auto">
+                <i class="bi bi-star-half fs-2"></i>
+            </div>
+            <h5 class="card-title fw-bold">Reseñas</h5>
+            <p class="card-text text-muted">Comparte tu opinión sobre los libros leídos.</p>
+            <a routerLink="/resenas" class="btn btn-outline-warning stretched-link">Ver Reseñas</a>
+            </div>
+        </div>
+    </div>
 </div>

@@ -10,6 +10,8 @@ import { Usuario } from '../../../core/domain/usuario'; // Verifica ruta relativ
 export class UsuarioListComponent implements OnInit {
 
   usuarios: Usuario[] = [];
+  usuariosFiltrados: Usuario[] = [];
+  searchTerm: string = '';
   loading: boolean = true;
   error: boolean = false;
 
@@ -25,6 +27,7 @@ export class UsuarioListComponent implements OnInit {
     this.usuarioService.findAll().subscribe({
       next: (data) => {
           this.usuarios = data;
+          this.usuariosFiltrados = data;
           this.loading = false;
           this.cd.detectChanges();
       },
@@ -41,5 +44,17 @@ export class UsuarioListComponent implements OnInit {
       if(confirm('¿Estás seguro de eliminar este usuario?')) {
           this.usuarioService.delete(id).subscribe(() => this.cargarUsuarios());
       }
+  }
+
+  filtrarUsuarios(): void {
+    if (!this.searchTerm) {
+      this.usuariosFiltrados = this.usuarios;
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.usuariosFiltrados = this.usuarios.filter(u =>
+        u.nombre.toLowerCase().includes(term) ||
+        u.email.toLowerCase().includes(term)
+      );
+    }
   }
 }

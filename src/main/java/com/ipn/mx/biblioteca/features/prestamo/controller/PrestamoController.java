@@ -53,9 +53,22 @@ public class PrestamoController {
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar un préstamo existente")
     public ResponseEntity<Prestamo> update(@PathVariable Integer id,
-                                           @RequestBody Prestamo prestamo) {
+            @RequestBody Prestamo prestamo) {
         Prestamo actualizado = prestamoService.update(id, prestamo);
         return ResponseEntity.ok(actualizado);
+    }
+
+    @PutMapping("/{id}/devolver")
+    @Operation(summary = "Registrar devolución de préstamo")
+    public ResponseEntity<Void> devolver(@PathVariable Integer id) {
+        prestamoService.devolver(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/renovar")
+    @Operation(summary = "Renovar préstamo")
+    public ResponseEntity<Prestamo> renovar(@PathVariable Integer id) {
+        return ResponseEntity.ok(prestamoService.renovar(id));
     }
 
     @DeleteMapping("/{id}")

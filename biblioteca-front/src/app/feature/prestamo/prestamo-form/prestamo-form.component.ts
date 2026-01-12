@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { PrestamoService } from '../prestamo.service';
 import { UsuarioService } from '../../usuario/usuario.service';
 import { LibroService } from '../../libro/libro.service';
+import { EjemplarService } from '../../ejemplar/ejemplar.service';
 import { Prestamo } from '../../../core/domain/prestamo';
 import { Usuario } from '../../../core/domain/usuario';
 import { Libro } from '../../../core/domain/libro';
@@ -34,7 +35,9 @@ export class PrestamoFormComponent implements OnInit {
         private prestamoService: PrestamoService,
         private usuarioService: UsuarioService,
         private libroService: LibroService,
-        private router: Router
+        private ejemplarService: EjemplarService,
+        private router: Router,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -42,16 +45,23 @@ export class PrestamoFormComponent implements OnInit {
     }
 
     cargarCatalogos(): void {
-        this.usuarioService.findAll().subscribe(data => this.usuarios = data);
-        this.libroService.findAll().subscribe(data => this.libros = data);
+        this.usuarioService.findAll().subscribe(data => {
+            this.usuarios = data;
+            this.cdr.detectChanges(); // Force update
+        });
+        this.libroService.findAll().subscribe(data => {
+            this.libros = data;
+            this.cdr.detectChanges(); // Force update
+        });
     }
 
     onLibroChange(): void {
         if (this.libroSeleccionadoId) {
-            this.prestamoService.getEjemplaresDisponibles(this.libroSeleccionadoId).subscribe({
-                next: (data: any[]) => {
-                    // Filtramos solo los disponibles
-                    this.ejemplaresDisponibles = data.filter((e: any) => e.estado === 'disponible');
+            this.ejemplarService.getEjemplaresPorLibro(this.libroSeleccionadoId).subscribe({
+                next: (data: Ejemplar[]) => {
+                    // Filtramos solo los disponibles (case-insensitive)
+                    this.ejemplaresDisponibles = data.filter((e) => e.estado && e.estado.toLowerCase() === 'disponible');
+                    this.cdr.detectChanges(); // Force update
                 },
                 error: (e: any) => console.error(e)
             });
@@ -59,12 +69,18 @@ export class PrestamoFormComponent implements OnInit {
     }
 
     guardar(): void {
-        // Aseguramos fechas en formato ISO
         this.prestamoService.save(this.prestamo).subscribe({
-            next: () => this.router.navigate(['/prestamos']),
+            next: () => {
+                alert('Préstamo registrado exitosamente. Se ha enviado el comprobante PDF por correo.');
+                this.router.navigate(['/prestamos']);
+            },
             error: (e) => {
                 console.error(e);
-                alert('Error al crear préstamo');
+                let msg = 'Error al registrar préstamo.';
+                if (e.error?.message) {
+                    msg += ' ' + e.error.message;
+                }
+                alert(msg);
             }
         });
     }

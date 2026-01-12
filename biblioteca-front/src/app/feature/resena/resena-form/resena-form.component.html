@@ -1,0 +1,47 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-warning text-dark">
+      <h3>{{ titulo }}</h3>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="guardar()" #f="ngForm">
+
+        <!-- Selección de Libro -->
+        <div class="mb-3">
+          <label for="libro" class="form-label">Libro</label>
+          <select class="form-select" id="libro" name="libroId" [(ngModel)]="resena.libroId" required>
+            <option [ngValue]="0" disabled>Seleccione un libro</option>
+            <option *ngFor="let l of libros" [ngValue]="l.id">
+              {{ l.titulo }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Calificación -->
+        <div class="mb-3">
+          <label for="rating" class="form-label">Calificación (1-5)</label>
+          <select class="form-select" id="rating" name="rating" [(ngModel)]="resena.rating" required>
+            <option [ngValue]="1">1 - Malo</option>
+            <option [ngValue]="2">2 - Regular</option>
+            <option [ngValue]="3">3 - Bueno</option>
+            <option [ngValue]="4">4 - Muy Bueno</option>
+            <option [ngValue]="5">5 - Excelente</option>
+          </select>
+        </div>
+
+        <!-- Comentario -->
+        <div class="mb-3">
+          <label for="comentario" class="form-label">Comentario</label>
+          <textarea class="form-control" id="comentario" name="comentario" rows="3" [(ngModel)]="resena.comentario" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="!f.valid || resena.libroId === 0">
+          <i class="bi bi-star"></i> Publicar Reseña
+        </button>
+        <button type="button" class="btn btn-secondary ms-2" routerLink="/libros">
+          Cancelar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
