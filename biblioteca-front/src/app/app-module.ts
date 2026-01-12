@@ -11,6 +11,8 @@ import { UsuarioListComponent } from './feature/usuario/usuario-list/usuario-lis
 import { UsuarioFormComponent } from './feature/usuario/usuario-form/usuario-form.component';
 import { PrestamoListComponent } from './feature/prestamo/prestamo-list/prestamo-list.component';
 import { PrestamoFormComponent } from './feature/prestamo/prestamo-form/prestamo-form.component';
+import { Login } from './feature/auth/login/login';
+import { RegisterUser } from './feature/auth/register-user/register-user';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { PrestamoFormComponent } from './feature/prestamo/prestamo-form/prestamo
     UsuarioListComponent,
     UsuarioFormComponent,
     PrestamoListComponent,
-    PrestamoFormComponent
+    PrestamoFormComponent,
+    Login,
+    RegisterUser
   ],
   imports: [
     BrowserModule,

@@ -5,10 +5,11 @@
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
         </div>
+        <p class="mt-2">Cargando datos...</p>
     </div>
 
     <div *ngIf="!loading && error" class="alert alert-danger">
-        Error de conexión.
+        Error al conectar con el servidor. Por favor intenta más tarde.
     </div>
 
     <div *ngIf="!loading && !error && autores.length === 0" class="alert alert-info">
