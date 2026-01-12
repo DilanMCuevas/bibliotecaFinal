@@ -1,0 +1,66 @@
+<div class="row mt-4">
+  <div class="col-md-12 text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary">{{ welcomeMessage }}</h1>
+    <p class="lead text-secondary">Gestiona tu experiencia en la biblioteca de forma centralizada.</p>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Tarjetas Comunes (Accesibles para todos) -->
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm border-0 hover-card">
+      <div class="card-body text-center">
+        <div class="icon-circle bg-primary text-white mb-3 mx-auto">
+          <i class="bi bi-book fs-2"></i>
+        </div>
+        <h5 class="card-title fw-bold">Catálogo de Libros</h5>
+        <p class="card-text text-muted">Explora nuestra colección completa de libros disponibles.</p>
+        <a routerLink="/libros" class="btn btn-outline-primary stretched-link">Ver catálogo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm border-0 hover-card">
+      <div class="card-body text-center">
+        <div class="icon-circle bg-success text-white mb-3 mx-auto">
+          <i class="bi bi-people fs-2"></i>
+        </div>
+        <h5 class="card-title fw-bold">Autores</h5>
+        <p class="card-text text-muted">Conoce a los autores y sus obras en nuestra biblioteca.</p>
+        <a routerLink="/autores" class="btn btn-outline-success stretched-link">Ver autores</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta Condicional (Solo para Admin -> Usuarios) -->
+  <div class="col-md-4 mb-4" *ngIf="currentUser?.rol === 'admin'">
+    <div class="card h-100 shadow-sm border-0 hover-card">
+      <div class="card-body text-center">
+        <div class="icon-circle bg-warning text-white mb-3 mx-auto">
+          <i class="bi bi-person-gear fs-2"></i>
+        </div>
+        <h5 class="card-title fw-bold">Gestión de Usuarios</h5>
+        <p class="card-text text-muted">Administra los usuarios registrados en el sistema.</p>
+        <a routerLink="/usuarios" class="btn btn-outline-warning stretched-link">Gestionar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta de Préstamos (Acciones diferentes según rol, aquí simplificamos redirigiendo al listado) -->
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm border-0 hover-card">
+      <div class="card-body text-center">
+        <div class="icon-circle bg-info text-white mb-3 mx-auto">
+            <i class="bi bi-journal-album fs-2"></i>
+        </div>
+        <h5 class="card-title fw-bold">Préstamos</h5>
+        <p class="card-text text-muted">
+            <span *ngIf="currentUser?.rol === 'admin'">Administra los préstamos activos e históricos.</span>
+            <span *ngIf="currentUser?.rol !== 'admin'">Revisa tus préstamos actuales e historia.</span>
+        </p>
+        <a routerLink="/prestamos" class="btn btn-outline-info stretched-link">Ver préstamos</a>
+      </div>
+    </div>
+  </div>
+</div>

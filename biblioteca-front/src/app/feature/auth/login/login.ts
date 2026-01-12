@@ -28,7 +28,7 @@ export class Login {
         this.authService.login({ email: this.email, password: this.password }).subscribe({
             next: (user) => {
                 this.loading = false;
-                this.router.navigate(['/libros']); // Redirigir al inicio o dashboard
+                this.router.navigate(['/home']); // Redirigir al inicio o dashboard
             },
             error: (err) => {
                 this.loading = false;

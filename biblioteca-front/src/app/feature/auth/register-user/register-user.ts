@@ -31,7 +31,7 @@ export class RegisterUser {
 
         this.loading = true;
         this.errorMessage = '';
-        
+
         this.usuarioService.save(this.usuario).subscribe({
             next: (createdUser) => {
                 this.loading = false;

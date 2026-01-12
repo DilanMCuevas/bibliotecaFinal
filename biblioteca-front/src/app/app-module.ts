@@ -13,10 +13,12 @@ import { PrestamoListComponent } from './feature/prestamo/prestamo-list/prestamo
 import { PrestamoFormComponent } from './feature/prestamo/prestamo-form/prestamo-form.component';
 import { Login } from './feature/auth/login/login';
 import { RegisterUser } from './feature/auth/register-user/register-user';
+import { HomeComponent } from './feature/home/home/home.component';
 
 @NgModule({
   declarations: [
     App,
+    HomeComponent,
     LibroListComponent,
     AutorListComponent,
     UsuarioListComponent,

@@ -1,48 +1,36 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4" *ngIf="currentUser">
   <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/">Biblioteca ESCOM</a>
+    <a class="navbar-brand" routerLink="/home">Biblioteca ESCOM</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Menú principal: solo visible si hay usuario logueado -->
-      <ul class="navbar-nav me-auto" *ngIf="usuario">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/home" routerLinkActive="active">Inicio</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/libros" routerLinkActive="active">Libros</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/autores" routerLinkActive="active">Autores</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" routerLink="/usuarios" routerLinkActive="active" *ngIf="usuario.rol === 'admin'">Usuarios</a>
+        <!-- Mostrar Usuarios solo si es admin -->
+        <li class="nav-item" *ngIf="currentUser.rol === 'admin'">
+            <a class="nav-link" routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" routerLink="/prestamos" routerLinkActive="active">Préstamos</a>
         </li>
       </ul>
-
-      <!-- Menú derecho: Login/Info Usuario -->
-      <ul class="navbar-nav ms-auto">
-          <ng-container *ngIf="!usuario">
-              <li class="nav-item">
-                  <a class="nav-link" routerLink="/login" routerLinkActive="active">Iniciar Sesión</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registrarse</a>
-              </li>
-          </ng-container>
-
-          <ng-container *ngIf="usuario">
-               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ usuario.nombre }} <span class="badge bg-secondary">{{ usuario.rol }}</span>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><button class="dropdown-item" (click)="logout()">Cerrar Sesión</button></li>
-                  </ul>
-                </li>
-          </ng-container>
-      </ul>
+      <div class="d-flex align-items-center">
+          <span class="navbar-text text-white me-3">
+              Hola, {{ currentUser.nombre }}
+          </span>
+          <button class="btn btn-outline-light btn-sm" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i> Salir
+          </button>
+      </div>
     </div>
   </div>
 </nav>

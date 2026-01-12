@@ -1,6 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, signal, OnInit } from '@angular/core';
 import { AuthService } from './core/auth/auth.service';
+import { Router } from '@angular/router';
 import { Usuario } from './core/domain/usuario';
 
 @Component({
@@ -10,19 +10,19 @@ import { Usuario } from './core/domain/usuario';
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  usuario: Usuario | null = null;
   protected readonly title = signal('biblioteca-front');
+  currentUser: Usuario | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngOnInit(): void {
-      this.authService.currentUser.subscribe(user => {
-          this.usuario = user;
-      });
+  ngOnInit() {
+    this.authService.currentUser.subscribe(user => {
+      this.currentUser = user;
+    });
   }
 
-  logout(): void {
-      this.authService.logout();
-      this.router.navigate(['/login']);
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

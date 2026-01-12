@@ -9,11 +9,13 @@ import { PrestamoFormComponent } from './feature/prestamo/prestamo-form/prestamo
 import { Login } from './feature/auth/login/login';
 import { RegisterUser } from './feature/auth/register-user/register-user';
 import { authGuard } from './core/guard/auth.guard';
+import { HomeComponent } from './feature/home/home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/libros', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'login', component: Login },
   { path: 'registro', component: RegisterUser },
+  { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'libros', component: LibroListComponent, canActivate: [authGuard] },
   { path: 'autores', component: AutorListComponent, canActivate: [authGuard] },
   { path: 'usuarios', component: UsuarioListComponent, canActivate: [authGuard] },
