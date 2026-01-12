@@ -1,0 +1,5 @@
+/* Centrar la tarjeta verticalmente si se desea */
+:host {
+    display: block;
+    min-height: 80vh;
+}
