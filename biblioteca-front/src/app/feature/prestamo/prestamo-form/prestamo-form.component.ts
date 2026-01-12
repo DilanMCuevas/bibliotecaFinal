@@ -48,12 +48,12 @@ export class PrestamoFormComponent implements OnInit {
 
     onLibroChange(): void {
         if (this.libroSeleccionadoId) {
-            this.prestamoService.findEjemplaresByLibro(this.libroSeleccionadoId).subscribe({
-                next: (data) => {
+            this.prestamoService.getEjemplaresDisponibles(this.libroSeleccionadoId).subscribe({
+                next: (data: any[]) => {
                     // Filtramos solo los disponibles
-                    this.ejemplaresDisponibles = data.filter(e => e.estado === 'disponible');
+                    this.ejemplaresDisponibles = data.filter((e: any) => e.estado === 'disponible');
                 },
-                error: (e) => console.error(e)
+                error: (e: any) => console.error(e)
             });
         }
     }
