@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Ensure the spinner is centered correctly in standard container */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+/* Global button spacing */
+.btn + .btn {
+  margin-left: 0.5rem;
+}
