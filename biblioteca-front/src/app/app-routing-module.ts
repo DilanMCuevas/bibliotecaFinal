@@ -6,9 +6,13 @@ import { UsuarioListComponent } from './feature/usuario/usuario-list/usuario-lis
 import { UsuarioFormComponent } from './feature/usuario/usuario-form/usuario-form.component';
 import { PrestamoListComponent } from './feature/prestamo/prestamo-list/prestamo-list.component';
 import { PrestamoFormComponent } from './feature/prestamo/prestamo-form/prestamo-form.component';
+import { Login } from './feature/auth/login/login';
+import { RegisterUser } from './feature/auth/register-user/register-user';
 
 const routes: Routes = [
   { path: '', redirectTo: '/libros', pathMatch: 'full' },
+  { path: 'login', component: Login },
+  { path: 'registro', component: RegisterUser },
   { path: 'libros', component: LibroListComponent },
   { path: 'autores', component: AutorListComponent },
   { path: 'usuarios', component: UsuarioListComponent },
