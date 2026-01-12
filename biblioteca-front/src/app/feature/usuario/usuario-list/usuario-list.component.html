@@ -12,6 +12,10 @@
         </div>
     </div>
 
+    <div *ngIf="!loading && error" class="alert alert-danger">
+        Error al conectar con el servidor. Intenta recargar la página.
+    </div>
+
     <div *ngIf="!loading && !error && usuarios.length === 0" class="alert alert-info">
         No hay usuarios registrados.
     </div>

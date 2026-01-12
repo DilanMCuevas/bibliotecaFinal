@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { UsuarioService } from '../usuario.service';
 import { Usuario } from '../../../core/domain/usuario'; // Verifica ruta relativa
 
@@ -13,7 +13,7 @@ export class UsuarioListComponent implements OnInit {
   loading: boolean = true;
   error: boolean = false;
 
-  constructor(private usuarioService: UsuarioService) { }
+  constructor(private usuarioService: UsuarioService, private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -21,15 +21,18 @@ export class UsuarioListComponent implements OnInit {
 
   cargarUsuarios(): void {
     this.loading = true;
+    this.error = false;
     this.usuarioService.findAll().subscribe({
       next: (data) => {
           this.usuarios = data;
           this.loading = false;
+          this.cd.detectChanges();
       },
       error: (e) => {
           console.error(e);
           this.loading = false;
           this.error = true;
+          this.cd.detectChanges();
       }
     });
   }

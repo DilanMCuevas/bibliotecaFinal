@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { LibroService } from '../libro.service';
 import { Libro } from '../../../core/domain/libro';
 
@@ -14,7 +14,7 @@ export class LibroListComponent implements OnInit {
   loading: boolean = true;
   error: boolean = false;
 
-  constructor(private libroService: LibroService) { }
+  constructor(private libroService: LibroService, private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.cargarLibros();
@@ -22,16 +22,18 @@ export class LibroListComponent implements OnInit {
 
   cargarLibros(): void {
     this.loading = true;
+    this.error = false;
     this.libroService.findAll().subscribe({
       next: (data) => {
         this.libros = data;
         this.loading = false;
-        console.log('Libros cargados:', this.libros);
+        this.cd.detectChanges();
       },
       error: (e) => {
         console.error(e);
         this.loading = false;
         this.error = true;
+        this.cd.detectChanges();
       }
     });
   }
