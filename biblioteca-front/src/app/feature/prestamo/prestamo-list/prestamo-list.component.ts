@@ -14,9 +14,8 @@ import { Ejemplar } from '../../../core/domain/ejemplar';
 })
 export class PrestamoListComponent implements OnInit {
     prestamos: Prestamo[] = [];
-    usuariosMap: Map<number,Usuario> = new Map();
-    // Mapa simple para mostrar IDs en vez de nombres si no cargamos todo
-    // Idealmente el backend en el GET /prestamos deberia devolver DTOs con nombres de usuario y titulo de libro
+    usuarioMap = new Map<number, string>();
+    libroMap = new Map<number, string>();
 
     constructor(private prestamoService: PrestamoService) {}
 
@@ -27,6 +26,7 @@ export class PrestamoListComponent implements OnInit {
     cargarPrestamos(): void {
         this.prestamoService.findAll().subscribe(data => {
             this.prestamos = data;
+            // Opcional: Cargar nombres reales si fuera necesario
         });
     }
 }

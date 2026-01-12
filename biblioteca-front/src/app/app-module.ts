@@ -1,11 +1,10 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http'; // Importante para servicios HTTP
-import { FormsModule } from '@angular/forms'; // Necesario para ngModel
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-// Importamos el componente (normalmente deberiamos tener un Modulo por Feature, pero por simplicidad lo pondre aqui primero)
 import { LibroListComponent } from './feature/libro/libro-list/libro-list.component';
 import { AutorListComponent } from './feature/autor/autor-list/autor-list.component';
 import { UsuarioListComponent } from './feature/usuario/usuario-list/usuario-list.component';
@@ -27,7 +26,7 @@ import { PrestamoFormComponent } from './feature/prestamo/prestamo-form/prestamo
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule // Agregamos FormsModule
+    FormsModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

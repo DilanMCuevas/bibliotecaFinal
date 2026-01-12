@@ -23,12 +23,8 @@ export class PrestamoService {
     return this.http.post<Prestamo>(this.apiUrl, prestamo);
   }
 
-  // Necesitamos buscar ejemplares DISPONIBLES para prestar
-  // Si no tienes un endpoint especifico, traeremos todos y filtraremos en el front (no ideal pero funciona)
-  findEjemplaresByLibro(libroId: number): Observable<Ejemplar[]> {
-     // Intento de ruta comun: /api/ejemplares/por-libro/{id}
-     // O buscamos todos los ejemplares y filtramos.
-     // Segun la estructura Java, parece que Ejemplar es un modulo aparte
-     return this.http.get<Ejemplar[]>(`${this.ejemplarUrl}/por-libro/${libroId}`);
+  // Método para obtener ejemplares disponibles por libro
+  getEjemplaresDisponibles(libroId: number): Observable<any[]> {
+     return this.http.get<any[]>(`${this.apiUrl}/ejemplares/por-libro/${libroId}`);
   }
 }
