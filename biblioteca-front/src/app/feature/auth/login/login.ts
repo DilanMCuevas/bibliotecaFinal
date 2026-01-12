@@ -6,38 +6,37 @@ import { AuthService } from '../../../core/auth/auth.service';
   selector: 'app-login',
   standalone: false,
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./login.css']
 })
 export class Login {
-    email: string = '';
-    passwordVal: string = ''; // Usamos passwordVal para evitar conflictos con palabras reservadas si las hubiera
-    loading: boolean = false;
-    error: string = '';
+    email = '';
+    password = '';
+    loading = false;
+    errorMessage = '';
 
     constructor(private authService: AuthService, private router: Router) {}
 
-    onSubmit(): void {
+    onSubmit() {
+        if (!this.email || !this.password) {
+            this.errorMessage = 'Por favor completa todos los campos';
+            return;
+        }
+
         this.loading = true;
-        this.error = '';
+        this.errorMessage = '';
 
-        const credentials = {
-            email: this.email,
-            password: this.passwordVal
-        };
-
-        this.authService.login(credentials).subscribe({
+        this.authService.login({ email: this.email, password: this.password }).subscribe({
             next: (user) => {
                 this.loading = false;
-                // Redirigir al dashboard o home
-                this.router.navigate(['/libros']);
+                this.router.navigate(['/libros']); // Redirigir al inicio o dashboard
             },
             error: (err) => {
-                console.error(err);
                 this.loading = false;
+                // Manejar error backend (401, 500, etc)
                 if (err.status === 401) {
-                    this.error = 'Credenciales incorrectas. Verifica tu correo y contraseña.';
+                    this.errorMessage = 'Credenciales incorrectas';
                 } else {
-                    this.error = 'Ocurrió un error al intentar iniciar sesión. Inténtalo más tarde.';
+                    this.errorMessage = 'Error en el servidor. Intenta más tarde';
                 }
             }
         });

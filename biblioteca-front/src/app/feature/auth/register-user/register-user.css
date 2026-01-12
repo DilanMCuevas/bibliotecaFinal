@@ -1,5 +1,86 @@
-/* Centrar la tarjeta verticalmente si se desea */
-:host {
+/* Usamos los mismos estilos base que el Login */
+.login-container {
+    max-width: 500px; /* Un poco mas ancho para registro */
+}
+
+/* Copiar estilos base de login.css o importarlos si usamos SCSS */
+/* Por ahora duplicaremos los necesarios para mantener independencia simple */
+
+.login-container {
+    max-width: 500px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.5rem;
     display: block;
-    min-height: 80vh;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #28a745; /* Verde para registro */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #218838;
+}
+
+.btn-login:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
 }

@@ -20,7 +20,7 @@
             <a class="nav-link" routerLink="/prestamos" routerLinkActive="active">Préstamos</a>
         </li>
       </ul>
-      
+
       <!-- Menú derecho: Login/Info Usuario -->
       <ul class="navbar-nav ms-auto">
           <ng-container *ngIf="!usuario">
@@ -31,7 +31,7 @@
                   <a class="nav-link" routerLink="/registro" routerLinkActive="active">Registrarse</a>
               </li>
           </ng-container>
-          
+
           <ng-container *ngIf="usuario">
                <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

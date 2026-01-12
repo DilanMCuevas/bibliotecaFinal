@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/auth/auth.service';
+import { UsuarioService } from '../../usuario/usuario.service';
 import { Usuario } from '../../../core/domain/usuario';
 
 @Component({
   selector: 'app-register-user',
   standalone: false,
   templateUrl: './register-user.html',
-  styleUrl: './register-user.css',
+  styleUrls: ['./register-user.css']
 })
 export class RegisterUser {
+    // Inicializamos como objeto plano ya que Usuario es una interfaz
     usuario: Usuario = {
         nombre: '',
         email: '',
@@ -17,25 +18,21 @@ export class RegisterUser {
         rol: 'miembro',
         estado: 'activo'
     };
-    loading: boolean = false;
-    error: string = '';
+    loading = false;
+    errorMessage = '';
 
-    // Para confirmar contraseña
-    confirmPasswordVal: string = '';
+    constructor(private usuarioService: UsuarioService, private router: Router) {}
 
-    constructor(private authService: AuthService, private router: Router) {
-    }
-
-    onSubmit(): void {
-        this.error = '';
-
-        if (this.usuario.password !== this.confirmPasswordVal) {
-            this.error = 'Las contraseñas no coinciden.';
+    onSubmit() {
+        if (!this.usuario.nombre || !this.usuario.email || !this.usuario.password) {
+            this.errorMessage = 'Todos los campos son obligatorios';
             return;
         }
 
         this.loading = true;
-        this.authService.register(this.usuario).subscribe({
+        this.errorMessage = '';
+        
+        this.usuarioService.save(this.usuario).subscribe({
             next: (createdUser) => {
                 this.loading = false;
                 alert('Registro exitoso. Ahora puedes iniciar sesión.');
@@ -44,7 +41,7 @@ export class RegisterUser {
             error: (err) => {
                 console.error(err);
                 this.loading = false;
-                this.error = 'Error al registrar usuario. Intenta nuevamente.';
+                this.errorMessage = 'Hubo un error al registrar. Intenta de nuevo.';
             }
         });
     }

@@ -8,17 +8,18 @@ import { PrestamoListComponent } from './feature/prestamo/prestamo-list/prestamo
 import { PrestamoFormComponent } from './feature/prestamo/prestamo-form/prestamo-form.component';
 import { Login } from './feature/auth/login/login';
 import { RegisterUser } from './feature/auth/register-user/register-user';
+import { authGuard } from './core/guard/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/libros', pathMatch: 'full' },
   { path: 'login', component: Login },
   { path: 'registro', component: RegisterUser },
-  { path: 'libros', component: LibroListComponent },
-  { path: 'autores', component: AutorListComponent },
-  { path: 'usuarios', component: UsuarioListComponent },
-  { path: 'usuarios/nuevo', component: UsuarioFormComponent },
-  { path: 'prestamos', component: PrestamoListComponent },
-  { path: 'prestamos/nuevo', component: PrestamoFormComponent }
+  { path: 'libros', component: LibroListComponent, canActivate: [authGuard] },
+  { path: 'autores', component: AutorListComponent, canActivate: [authGuard] },
+  { path: 'usuarios', component: UsuarioListComponent, canActivate: [authGuard] },
+  { path: 'usuarios/nuevo', component: UsuarioFormComponent, canActivate: [authGuard] },
+  { path: 'prestamos', component: PrestamoListComponent, canActivate: [authGuard] },
+  { path: 'prestamos/nuevo', component: PrestamoFormComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
