@@ -1,0 +1,49 @@
+<div class="container mt-4">
+    <h2>Registrar Nuevo Préstamo</h2>
+    <form (ngSubmit)="guardar()" #prestamoForm="ngForm">
+
+        <!-- 1. Seleccionar Usuario -->
+        <div class="mb-3">
+            <label class="form-label">Usuario</label>
+            <select class="form-select" [(ngModel)]="prestamo.usuarioId" name="usuarioId" required>
+                <option [ngValue]="0" disabled>Seleccione un usuario...</option>
+                <option *ngFor="let u of usuarios" [ngValue]="u.id">
+                    {{ u.nombre }} ({{ u.email }})
+                </option>
+            </select>
+        </div>
+
+        <!-- 2. Seleccionar Libro (Auxiliar para buscar ejemplares) -->
+        <div class="mb-3">
+            <label class="form-label">Libro</label>
+            <select class="form-select" [(ngModel)]="libroSeleccionadoId" name="libroId" (change)="onLibroChange()">
+                <option [ngValue]="null" disabled>Seleccione un libro...</option>
+                <option *ngFor="let l of libros" [ngValue]="l.id">
+                    {{ l.titulo }}
+                </option>
+            </select>
+        </div>
+
+        <!-- 3. Seleccionar Ejemplar (Filtrado por Libro) -->
+        <div class="mb-3">
+            <label class="form-label">Ejemplar Disponible</label>
+            <select class="form-select" [(ngModel)]="prestamo.ejemplarId" name="ejemplarId" required [disabled]="!libroSeleccionadoId">
+                <option [ngValue]="0" disabled>Seleccione un ejemplar...</option>
+                <option *ngFor="let e of ejemplaresDisponibles" [ngValue]="e.id">
+                    ID: {{ e.id }} - Ubicación: {{ e.ubicacion }}
+                </option>
+            </select>
+            <div *ngIf="libroSeleccionadoId && ejemplaresDisponibles.length === 0" class="form-text text-danger">
+                No hay ejemplares disponibles para este libro.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha Vencimiento</label>
+            <input type="datetime-local" class="form-control" [ngModel]="prestamo.fechaVencimiento | date:'yyyy-MM-ddTHH:mm'" (ngModelChange)="prestamo.fechaVencimiento=$event" name="fechaVencimiento" required>
+        </div>
+
+        <button type="submit" class="btn btn-success" [disabled]="!prestamoForm.form.valid || prestamo.ejemplarId === 0">Registrar Préstamo</button>
+        <a routerLink="/prestamos" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>

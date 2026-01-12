@@ -1,0 +1,7 @@
+/* Estilos especificos para la lista de libros */
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: scale(1.02);
+}
